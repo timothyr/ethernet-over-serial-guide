@@ -33,13 +33,13 @@ For convenience, here is a copy of the commands to run:
 
 ### Install required packages
 ```
-$ sudo apt-get install -y binfmt-support qemu qemu-user-static debootstrap kpartx
-$ sudo apt-get install -y lvm2 dosfstools gpart binutils git lib32ncurses5-dev python-m2crypto
-$ sudo apt-get install -y gawk wget git-core diffstat unzip texinfo gcc-multilib build-essential chrpath socat libsdl1.2-dev
-$ sudo apt-get install -y autoconf libtool libglib2.0-dev libarchive-dev
-$ sudo apt-get install -y python-git xterm sed cvs subversion coreutils texi2html bc
-$ sudo apt-get install -y docbook-utils python-pysqlite2 help2man make gcc g++ desktop-file-utils libgl1-mesa-dev
-$ sudo apt-get install -y libglu1-mesa-dev mercurial automake groff curl lzop asciidoc u-boot-tools mtd-utils
+sudo apt-get install -y binfmt-support qemu qemu-user-static debootstrap kpartx
+sudo apt-get install -y lvm2 dosfstools gpart binutils git lib32ncurses5-dev python-m2crypto
+sudo apt-get install -y gawk wget git-core diffstat unzip texinfo gcc-multilib build-essential chrpath socat libsdl1.2-dev
+sudo apt-get install -y autoconf libtool libglib2.0-dev libarchive-dev
+sudo apt-get install -y python-git xterm sed cvs subversion coreutils texi2html bc
+sudo apt-get install -y docbook-utils python-pysqlite2 help2man make gcc g++ desktop-file-utils libgl1-mesa-dev
+sudo apt-get install -y libglu1-mesa-dev mercurial automake groff curl lzop asciidoc u-boot-tools mtd-utils
 ```
 
 ### Deploy source
@@ -49,12 +49,45 @@ $ git clone https://github.com/varigit/debian-var.git -b debian_jessie_varsommx6
 ```
 
 ### Modify kernel configuration (part 1)
+From "12 How-to: Modify kernel configuration"
 ```
-1. cd ~/var_som_mx6_debian/src/kernel
-2. Run "sudo make ARCH=arm mrproper"
-3. Run "sudo make ARCH=arm imx_v7_var_defconfig"
-4. Run "sudo make ARCH=arm menuconfig"
+cd ~/var_som_mx6_debian/src/kernel
+sudo make ARCH=arm mrproper
+sudo make ARCH=arm imx_v7_var_defconfig
+sudo make ARCH=arm menuconfig
 ```
 
 ### Enable PPP (Point-to-Point Protocol)
+* Navigate to Device Drivers
+* Navigate to Network Device Support
+* Go to everything PPP related and Press 'Y' so it has a (*) (should look similar to image below)
+* Save Kernel by using Arrow key -> Right until the bottom text hovers over (S)ave
+* Press Enter to Save. Do not fill out a name for the config file. Press enter again.
+* Exit the menu config
 
+![PPP in Kernel](ppp-debian-stretch.png?raw=true "PPP in Kernel")
+
+### Modify kernel configuration (part 2)
+From "12 How-to: Modify kernel configuration"
+```
+sudo make ARCH=arm savedefconfig
+sudo cp arch/arm/configs/imx_v7_var_defconfig arch/arm/configs/imx_v7_var_defconfig.orig
+sudo cp defconfig arch/arm/configs/imx_v7_var_defconfig
+```
+
+### Build the kernel
+Do NOT run the commands in "4.1 Build all". It will overwrite the config you just modified.
+
+Run all commands in "4.2 Build by parts"
+```
+cd ~/var_som_mx6_debian
+./make_var_som_mx6_debian.sh -c bootloader
+./make_var_som_mx6_debian.sh -c kernel
+./make_var_som_mx6_debian.sh -c modules
+./make_var_som_mx6_debian.sh -c rootfs
+./make_var_som_mx6_debian.sh -c rtar
+```
+
+### Create boot SD card
+1) Plug SD card into machine
+2) Run fdisk -l to find where the SD card is
