@@ -54,7 +54,7 @@ $ git clone https://github.com/varigit/debian-var.git -b debian_jessie_varsommx6
 ```
 
 ### Modify kernel configuration (part 1)
-From "12 How-to: Modify kernel configuration"
+From ["12 How-to: Modify kernel configuration"](http://variwiki.com/index.php?title=VAR-SOM-MX6_Debian_R2#How-to:_Modify_kernel_configuration "12 How-to: Modify kernel configuration")
 ```
 cd ~/var_som_mx6_debian/src/kernel
 sudo make ARCH=arm mrproper
@@ -70,10 +70,10 @@ sudo make ARCH=arm menuconfig
 * Press Enter to Save. Do not fill out a name for the config file. Press enter again.
 * Exit the menu config
 
-![PPP in Kernel](ppp-debian-stretch.png?raw=true "PPP in Kernel")
+![Point-to-Point Protocol Selected in Kernel](ppp-debian-stretch.png?raw=true "PPP (Point-to-Point Protocol Selected in Kernel")
 
 ### Modify kernel configuration (part 2)
-From "12 How-to: Modify kernel configuration"
+From ["12 How-to: Modify kernel configuration"](http://variwiki.com/index.php?title=VAR-SOM-MX6_Debian_R2#How-to:_Modify_kernel_configuration "12 How-to: Modify kernel configuration")
 ```
 sudo make ARCH=arm savedefconfig
 sudo cp arch/arm/configs/imx_v7_var_defconfig arch/arm/configs/imx_v7_var_defconfig.orig
@@ -83,7 +83,7 @@ sudo cp defconfig arch/arm/configs/imx_v7_var_defconfig
 ### Build the kernel
 Do NOT run the commands in "4.1 Build all". It will overwrite the config you just modified.
 
-Run all commands in "4.2 Build by parts"
+Run all commands in ["4.2 Build by parts"](http://variwiki.com/index.php?title=VAR-SOM-MX6_Debian_R2#Build_by_parts "4.2 Build by parts")
 ```
 cd ~/var_som_mx6_debian
 ./make_var_som_mx6_debian.sh -c bootloader
@@ -96,7 +96,7 @@ cd ~/var_som_mx6_debian
 ### Create boot SD card
 1) Plug SD card into machine
 2) Run fdisk -l to find where the SD card is
-![fdisk -l](fdisk.png?raw=true "fdisk -l")
+![fdisk -l output](fdisk.png?raw=true "fdisk -l output")
 3) Outlined in red is my SD card. It is at /dev/sdd
 4) Run command below but replace /dev/sdX with your SD card location (e.g. /dev/sdd)
 
@@ -124,6 +124,15 @@ The 2 Variscites must be connected over Serial.
 In the end the set up will look similar to this:
 
 ![2 Variscites Connected By Serial](variscite-serial-connected.jpg?raw=true "2 Variscites Connected By Serial")
+
+The pin-out for the default RS232 sourced from https://www.variscite.com/wp-content/uploads/2017/12/VAR-MX6CustomBoard-Datasheet.pdf:
+
+![RS232 Serial Pin Out](rs232-j15-pin-out.png?raw=true "RS232 Serial Pin Out")
+
+Following the pin-out:
+* RX = pin 2
+* TX = pin 3
+* GND = pin 5
 
 ### Wire the host and device together
 * Connect RX (host) -> TX (device)
@@ -168,3 +177,32 @@ ping 192.168.10.18
 ```
 ssh linaro@192.168.10.18
 ```
+
+### Making changes
+* Change IP address
+  * Switch 192.168.10.18 and 192.168.10.19 to new IP addresses. 
+  * NOTE: They must not be used by any other device.
+* Change baud rate
+  * Change 38400 to new baud rate, e.g. 152000
+* Change tty
+  * Switch /dev/ttymxc2 with other terminal, e.g. ttyS0
+
+### Debugging
+* Error running pppd:
+```
+Peer refused to agree to our IP address
+Connect time 0.1 minutes.
+Sent 2650 bytes, received 2650 bytes.
+sent [IPCP TermReq id=0xcc "Refused our IP address"]
+rcvd [IPCP TermReq id=0xcc "Refused our IP address"]
+sent [IPCP TermAck id=0xcc]
+rcvd [IPCP TermAck id=0xcc]
+sent [LCP TermReq id=0x3 "No network protocols running"]
+rcvd [LCP TermAck id=0x3]
+Connection terminated.
+```
+Solution: IP Addresses do not match or are already in use. Check the IP Addresses in the pppd command.
+
+#### Original Reference
+“Share Internet to the Raspberry Pi Zero” - The Magpi Magazine, 2016
+https://www.raspberrypi.org/magpi/share-internet-to-the-raspberry-pi-zero/
