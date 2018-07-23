@@ -24,7 +24,7 @@ By default, the Kernel does not have PPP enabled.
 
 To enable PPP, we must rebuild the Kernel.
 
-## Building the New Kernel
+## Part 1 - Building the New Kernel
 
 Follow the guide here: http://variwiki.com/index.php?title=VAR-SOM-MX6_Debian_R2
 For convenience, here is a copy of the commands to run:
@@ -112,4 +112,9 @@ While logged into the Variscite (user: linaro pass: linaro) run the following co
 sudo su
 debian-install.sh -b mx6cb -t res
 ```
+
+## Part 2 - Physical Set Up
+The 2 Variscite's must be connected over Serial. 
+
+In the end the set up will look similar to this:
 
