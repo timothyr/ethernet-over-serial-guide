@@ -17,6 +17,10 @@ We will use PPP (Point-to-Point-Protocol) to give a Variscite access to ethernet
 * 1x 4gb or larger SD card
 * 1x SD card reader
 
+Optional
+* 1x extra keyboard - for device Variscite
+* 1x extra monitor with HDMI in - for device Variscite
+
 ### Kernel Modifications
 
 At the time of writing, we are using Debian Jessie Release 2 - 4.1.15.
@@ -114,7 +118,52 @@ debian-install.sh -b mx6cb -t res
 ```
 
 ## Part 2 - Physical Set Up
-The 2 Variscite's must be connected over Serial. 
+The 2 Variscites must be connected over Serial. 
 
 In the end the set up will look similar to this:
 
+![2 Variscites Connected By Serial](variscite-serial-connected.jpg?raw=true "2 Variscites Connected By Serial")
+
+### Wire the host and device together
+* Connect RX (host) -> TX (device)
+* Connect TX (host) -> RX (device)
+* Connect GND (host) -> GND (device)
+
+## Part 3 - Connect
+Now that the Kernel is ready and the two Variscites are physically connected, it is time to share the ethernet connection.
+
+### Enable ip forwarding on the host
+1) On the host Variscite (the one with ethernet) and run these commands:
+```
+sudo su
+apt-get install -y nano
+nano /etc/sysctl.conf
+```
+2) Find this line:
+```
+#net.ipv4.ip_forward=1
+```
+3) Uncomment the line by removing the '#' at the start.
+4) Save and exit by pressing CTRL+X then pressing Y.
+
+### Connect: host
+On the host Variscite, run this command:
+```
+pppd -d noauth nocrtscts xonxoff passive local maxfail 0 nodetach 192.168.10.18:192.168.10.19 persist proxyarp /dev/ttymxc2 38400
+```
+
+### Connect: device
+Using a keyboard and monitor attached to the device Variscite, run this command:
+```
+pppd -d noauth nocrtscts xonxoff passive local maxfail 0 defaultroute persist nodetach 192.168.10.19:192.168.10.18 /dev/ttymxc2 38400
+```
+
+### Test
+* Try pinging the device
+```
+ping 192.168.10.18
+```
+* Try ssh'ing into the device
+```
+ssh linaro@192.168.10.18
+```
