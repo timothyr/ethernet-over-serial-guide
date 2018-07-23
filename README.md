@@ -91,3 +91,25 @@ cd ~/var_som_mx6_debian
 ### Create boot SD card
 1) Plug SD card into machine
 2) Run fdisk -l to find where the SD card is
+![fdisk -l](fdisk.png?raw=true "fdisk -l")
+3) Outlined in red is my SD card. It is at /dev/sdd
+4) Run command below but replace /dev/sdX with your SD card location (e.g. /dev/sdd)
+
+```
+./make_var_som_mx6_debian.sh -c sdcard -d /dev/sdX
+```
+
+### Done
+You have an SD card with the Point-to-Point Protocol enabled.
+
+* Plug the SD card into the Variscite MX6 Custom board. 
+* Hold the middle button and switch the power on
+* The board will boot from the SD card
+
+### Optional - Flash SD card to internal memory (eMMC)
+While logged into the Variscite (user: linaro pass: linaro) run the following commands:
+```
+sudo su
+debian-install.sh -b mx6cb -t res
+```
+
