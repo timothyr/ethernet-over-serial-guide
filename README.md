@@ -30,11 +30,9 @@ To enable PPP, we must rebuild the Kernel.
 
 ## Part 1 - Building the New Kernel
 
-Follow the guide here: http://variwiki.com/index.php?title=VAR-SOM-MX6_Debian_R2
+The following commands were taken from the Variscite Wiki: http://variwiki.com/index.php?title=VAR-SOM-MX6_Debian_R2
 
-For convenience, here is a copy of the commands to run:
-
-(Assuming your machine is running Debian jessie, see guide for Ubuntu packages if you're using Ubuntu)
+(Assuming your machine is running Debian jessie, see wiki for Ubuntu packages if your machine is running Ubuntu)
 
 ### Install required packages
 ```
