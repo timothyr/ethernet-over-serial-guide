@@ -1,5 +1,7 @@
 # Ethernet Over Serial Guide
 
+Developed for [Flashgate Technology Inc.](https://www.flashgate.ca/) and [Provent Technologies Co.](https://proventtechnology.ca/)
+
 ## Getting Started
 
 We will use PPP (Point-to-Point-Protocol) to give a Variscite access to ethernet with only a serial connection.
@@ -11,7 +13,7 @@ We will use PPP (Point-to-Point-Protocol) to give a Variscite access to ethernet
 
 ### Materials Needed
 
-* 2x Variscite SOM
+* 2x [Variscite SOM](https://www.variscite.com/products/system-on-module-som/cortex-a9/var-som-mx6-cpu-freescale-imx6/)
 * 3x Jumper cable
 * 1x PC with Debian or Ubuntu installed - used for building Kernel
 * 1x 4gb or larger SD card
